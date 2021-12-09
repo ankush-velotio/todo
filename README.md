@@ -2,15 +2,15 @@
 
 ## Project Structure
 
-##`/cmd`
+### `/cmd`
 Main applications for this project.
 
-##`/internal`
+### `/internal`
 Private applications and library code. Code inside this directory is intended to use
 in this application only.
 
-##`/test`
+### `/test`
 Test apps and test data for this project
 
-##`/web`
+### `/web`
 Web application specific components: static web assets, server side templates and SPAs.
