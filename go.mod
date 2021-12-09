@@ -1,3 +1,3 @@
-module todo-go
+module todo
 
 go 1.17
