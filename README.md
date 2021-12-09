@@ -1,5 +1,7 @@
 # todo
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/ankush-velotio/todo?style=flat-square)](https://goreportcard.com/report/github.com/ankush-velotio/todo)
+
 ## Project Structure
 
 ### `/cmd`
