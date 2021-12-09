@@ -33,7 +33,7 @@ func GenerateJWT(email string) (string, error) {
 }
 
 // IsAuthorized Middleware for verifying the JWT token
-func IsAuthorized(endpoint http.HandlerFunc) http.Handler {
+func IsAuthorized(endpoint http.HandlerFunc)  (http.Handler, error) {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header["Token"] != nil {
 
@@ -72,5 +72,5 @@ func IsAuthorized(endpoint http.HandlerFunc) http.Handler {
 				return
 			}
 		}
-	})
+	}), nil
 }
