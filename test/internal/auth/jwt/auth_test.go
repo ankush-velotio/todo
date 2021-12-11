@@ -2,9 +2,9 @@ package jwt
 
 import (
 	"fmt"
-"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 	"net/http"
-"testing"
+	"testing"
 	"time"
 	auth "todo/internal/auth/jwt"
 )
@@ -21,7 +21,7 @@ func TestGenerateJWT(t *testing.T) {
 			t.Errorf("JWT token generation failed")
 		}
 		signingKey := []byte("ehe76bsgd7")
-		tkn, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {return signingKey, nil})
+		tkn, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) { return signingKey, nil })
 		if claims, ok := tkn.Claims.(jwt.MapClaims); ok && tkn.Valid {
 			if claims["exp"].(float64) < float64(time.Now().Unix()) {
 				t.Errorf("Token is expired")
