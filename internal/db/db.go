@@ -10,12 +10,12 @@ import (
 
 func ConnectDB(port int, dbName, dbUser, dbPassword, host string) *gorm.DB {
 	databaseDialect := "postgres"
-	databaseURL := "postgres://" + dbUser + ":" + dbPassword + "@" + host +":" + strconv.Itoa(port) + "/" + dbName + "?sslmode=disable"
-    connection, err := gorm.Open( databaseDialect, databaseURL)
+	databaseURL := "postgres://" + dbUser + ":" + dbPassword + "@" + host + ":" + strconv.Itoa(port) + "/" + dbName + "?sslmode=disable"
+	connection, err := gorm.Open(databaseDialect, databaseURL)
 
-    if err != nil {
-    	panic("failed to connect database")
-    }
+	if err != nil {
+		panic("failed to connect database")
+	}
 
 	log.Println("connected to database")
 	return connection
