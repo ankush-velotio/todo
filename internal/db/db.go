@@ -17,6 +17,10 @@ func ConnectDB(port int, dbName, dbUser, dbPassword, host string) *gorm.DB {
 		panic("failed to connect database")
 	}
 
+	if err = connection.DB().Ping(); err != nil {
+		log.Fatalln("failed to ping database")
+	}
+
 	log.Println("connected to database")
 	return connection
 }
