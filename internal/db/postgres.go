@@ -9,7 +9,7 @@ import (
 
 type PostgreSQLRepository struct {
 	DatabaseDialect string
-	DatabaseURL string
+	DatabaseURL     string
 }
 
 func (c *PostgreSQLRepository) ConnectDB() *gorm.DB {
