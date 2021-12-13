@@ -5,17 +5,15 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
-	"os"
 )
 
-var databaseURL = os.Getenv("POSTGRES_URL")
-
-type ConnectPostgresSQLStrategy struct {
+type PostgreSQLRepository struct {
 	DatabaseDialect string
+	DatabaseURL string
 }
 
-func (c *ConnectPostgresSQLStrategy) ConnectDB() *gorm.DB {
-	connection, err := gorm.Open(c.DatabaseDialect, databaseURL)
+func (c *PostgreSQLRepository) ConnectDB() *gorm.DB {
+	connection, err := gorm.Open(c.DatabaseDialect, c.DatabaseURL)
 
 	if err != nil {
 		panic("failed to connect database")
@@ -29,7 +27,7 @@ func (c *ConnectPostgresSQLStrategy) ConnectDB() *gorm.DB {
 	return connection
 }
 
-func (c *ConnectPostgresSQLStrategy) CloseDB(connection *gorm.DB) error {
+func (c *PostgreSQLRepository) CloseDB(connection *gorm.DB) error {
 	if err := connection.Close(); err != nil {
 		return errors.New("cannot close current database")
 	}
