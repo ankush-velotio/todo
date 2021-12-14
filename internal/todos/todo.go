@@ -8,22 +8,23 @@ import (
 )
 
 type Status string
+
 const (
-	Completed Status = "completed"
+	Completed  Status = "completed"
 	Incomplete Status = "incomplete"
-	Canceled Status = "canceled"
+	Canceled   Status = "canceled"
 )
 
 /*
 	_Todo model
- */
+*/
 type Todo struct {
 	gorm.Model
-	Title        string    `json:"title"`
-	Description  string    `json:"description"`
-	Date         time.Time `json:"date"`
-	IsBookmarked bool      `json:"isBookmarked"`
-	Owner        user.User    `json:"owner" gorm:"foreignKey:ID"`
-	Editors      []user.User  `json:"editors" gorm:"many2many:todo_editors;"`
-	Status       Status    `json:"status"`
+	Title        string      `json:"title"`
+	Description  string      `json:"description"`
+	Date         time.Time   `json:"date"`
+	IsBookmarked bool        `json:"isBookmarked"`
+	Owner        user.User   `json:"owner" gorm:"foreignKey:ID"`
+	Editors      []user.User `json:"editors" gorm:"many2many:todo_editors;"`
+	Status       Status      `json:"status"`
 }
