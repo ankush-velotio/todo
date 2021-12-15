@@ -3,7 +3,7 @@ package connect_db
 import (
 	"github.com/jinzhu/gorm"
 	"os"
-"todo/internal/db"
+	"todo/internal/db"
 )
 
 type PostgreSQL struct {
@@ -19,4 +19,4 @@ func (db PostgreSQL) CloseDB(conn *gorm.DB) error {
 }
 
 var PostgresConn = PostgreSQL{IDBRepository: &db.PostgreSQLRepository{DatabaseDialect: "postgres",
-		DatabaseURL: os.Getenv("POSTGRES_URL")}}
+	DatabaseURL: os.Getenv("POSTGRES_URL")}}
