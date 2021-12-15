@@ -4,6 +4,9 @@
 
 ## Project Structure
 
+### `.githooks/`
+Contains the git hooks to run. It requires the git hooks installed. [Githooks](https://github.com/rycus86/githooks#installation)
+
 ### `/cmd`
 Main applications for this project.
 

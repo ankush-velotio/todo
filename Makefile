@@ -3,3 +3,6 @@ dev-setup:
 
 dev-setup-down:
 	docker-compose -f docker-compose.yml down
+
+run-pre-commit:
+	gofmt -w .
