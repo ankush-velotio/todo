@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"todo/cmd/connect_db"
+	"todo/internal/models"
 )
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
@@ -24,14 +25,14 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		}
 	}(pgConf, conn)
 
-	var user User
+	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		err = errors.New("error in reading body")
 		setHeader(w, err, http.StatusBadRequest)
 		return
 	}
-	var dbUser User
+	var dbUser models.User
 	conn.Where("email = ?", user.Email).First(&dbUser)
 
 	//checks if email is already register or not
