@@ -7,6 +7,7 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/ory/dockertest/v3 v3.8.1
 	github.com/stretchr/testify v1.7.0
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	gotest.tools/v3 v3.0.3
 )
 
