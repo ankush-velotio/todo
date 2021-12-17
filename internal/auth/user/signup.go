@@ -41,19 +41,20 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.Password, err = GenerateHashPassword(user.Password)
+	user.Password, err = GenerateHashPassword([]byte(user.Password))
 	if err != nil {
 		log.Fatalln("error in password hash")
 	}
 
 	//insert user details in database
 	conn.Create(&user)
+	user.Password = ""
 	setHeader(w, user, http.StatusOK)
 }
 
-func GenerateHashPassword(password []byte) ([]byte, error) {
+func GenerateHashPassword(password []byte) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword(password, 14)
-	return bytes, err
+	return string(bytes), err
 }
 
 func setHeader(w http.ResponseWriter, data interface{}, statusCode int) {
