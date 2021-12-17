@@ -4,8 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"log"
 	db "todo/cmd/connect_db"
-	"todo/internal/auth/user"
-	"todo/internal/todos"
+	"todo/internal/models"
 )
 
 // Migrate function is used to create database table from the model
@@ -19,7 +18,7 @@ func Migrate(postgres db.PostgreSQL) {
 			log.Println("Migrate DB: cannot close current database")
 		}
 	}(conn)
-	conn.AutoMigrate(user.User{})
-	conn.AutoMigrate(todos.Todo{})
+	conn.AutoMigrate(models.User{})
+	conn.AutoMigrate(models.Todo{})
 	log.Println("Migrate DB: database migrated successfully")
 }

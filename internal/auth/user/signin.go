@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"todo/cmd/connect_db"
 	auth "todo/internal/auth/jwt"
+	"todo/internal/models"
 )
 
 // Authentication type is just for getting login credentials
@@ -48,7 +49,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var authUser User
+	var authUser models.User
 	conn.Where("email = ?", authDetails.Email).First(&authUser)
 	if authUser.Email == "" {
 		err = errors.New("username or password is incorrect")
