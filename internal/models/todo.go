@@ -23,7 +23,8 @@ type Todo struct {
 	Description  string    `json:"description"`
 	Date         time.Time `json:"date"`
 	IsBookmarked bool      `json:"isBookmarked"`
-	Owner        User      `json:"owner" gorm:"foreignKey:ID"`
-	Editors      []User    `json:"editors" gorm:"many2many:todo_editors;"`
-	Status       Status    `json:"status"`
+	UserEmail    string
+	Owner        User   `json:"owner" gorm:"foreignKey:UserEmail"`
+	Editors      []User `json:"editors" gorm:"many2many:todo_editors;"`
+	Status       Status `json:"status"`
 }
