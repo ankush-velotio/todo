@@ -81,15 +81,15 @@ func TestMain(m *testing.M) {
 }
 
 func TestConnectDB(t *testing.T) {
-	c := connect_db.PostgresConn.ConnectDB()
+	c := connect_db.DBConn.ConnectDB()
 	if reflect.TypeOf(c) == reflect.TypeOf(gorm.DB{}) {
 		assert.Assert(t, true)
 	}
 }
 
 func TestCloseDB(t *testing.T) {
-	conn := connect_db.PostgresConn.ConnectDB()
-	err := connect_db.PostgresConn.CloseDB(conn)
+	conn := connect_db.DBConn.ConnectDB()
+	err := connect_db.DBConn.CloseDB(conn)
 	if err != nil {
 		assert.Error(t, err, "cannot close current database")
 	}

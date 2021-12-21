@@ -5,11 +5,11 @@ import (
 	"errors"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"todo/cmd/connect_db"
 	auth "todo/internal/auth/jwt"
+	"todo/internal/common/utils"
 	"todo/internal/models"
 )
 
@@ -24,9 +24,9 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	pgConf := connect_db.PostgresConn
+	pgConf := connect_db.DBConn
 	conn := pgConf.ConnectDB()
-	defer func(pgConf connect_db.PostgreSQL, conn *gorm.DB) {
+	defer func(pgConf connect_db.DB, conn *gorm.DB) {
 		err := pgConf.CloseDB(conn)
 		if err != nil {
 			log.Println("SignIn: Cannot close current database")
@@ -37,15 +37,13 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&authDetails)
 	if err != nil {
 		err = errors.New("error in reading body")
-		setHeader(w, err, http.StatusBadRequest)
+		utils.SetHeader(w, err, http.StatusBadRequest)
 		return
 	}
-	b, _ := ioutil.ReadAll(r.Body)
-	log.Println(b)
 
 	if authDetails.Email == "" || authDetails.Password == "" {
 		err = errors.New("email and password both are required fields")
-		setHeader(w, err, http.StatusBadRequest)
+		utils.SetHeader(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -53,7 +51,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	conn.Where("email = ?", authDetails.Email).First(&authUser)
 	if authUser.Email == "" {
 		err = errors.New("username or password is incorrect")
-		setHeader(w, err, http.StatusUnauthorized)
+		utils.SetHeader(w, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -61,14 +59,14 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	if !check {
 		err = errors.New("username or password is incorrect")
-		setHeader(w, err, http.StatusUnauthorized)
+		utils.SetHeader(w, err, http.StatusUnauthorized)
 		return
 	}
 
 	validToken, err := auth.GenerateJWT(authUser.Email)
 	if err != nil {
 		err = errors.New("failed to generate token")
-		setHeader(w, err, http.StatusInternalServerError)
+		utils.SetHeader(w, err, http.StatusInternalServerError)
 		return
 	}
 

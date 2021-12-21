@@ -74,7 +74,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Could not connect to docker: %s", err)
 	}
 	// Migrate models
-	migration.Migrate(connect_db.PostgreSQL{IDBRepository: &db.PostgreSQLRepository{DatabaseDialect: "postgres",
+	migration.Migrate(connect_db.DB{IDBRepository: &db.PostgreSQLRepository{DatabaseDialect: "postgres",
 		DatabaseURL: os.Getenv("POSTGRES_URL")}})
 
 	// Create test user
