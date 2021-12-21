@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"todo/cmd/connect_db"
+	"todo/internal/common/utils"
 	"todo/internal/models"
 )
 
@@ -16,9 +17,9 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	pgConf := connect_db.PostgresConn
+	pgConf := connect_db.DBConn
 	conn := pgConf.ConnectDB()
-	defer func(pgConf connect_db.PostgreSQL, conn *gorm.DB) {
+	defer func(pgConf connect_db.DB, conn *gorm.DB) {
 		err := pgConf.CloseDB(conn)
 		if err != nil {
 			log.Println("SignUp: Cannot close current database")
@@ -29,7 +30,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		err = errors.New("error in reading body")
-		setHeader(w, err, http.StatusBadRequest)
+		utils.SetHeader(w, err, http.StatusBadRequest)
 		return
 	}
 	var dbUser models.User
@@ -38,7 +39,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	//checks if email is already register or not
 	if dbUser.Email != "" {
 		err = errors.New("email already in use")
-		setHeader(w, err, http.StatusConflict)
+		utils.SetHeader(w, err, http.StatusConflict)
 		return
 	}
 
@@ -50,19 +51,10 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	//insert user details in database
 	conn.Create(&user)
 	user.Password = ""
-	setHeader(w, user, http.StatusOK)
+	utils.SetHeader(w, user, http.StatusOK)
 }
 
 func GenerateHashPassword(password []byte) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword(password, 14)
 	return string(bytes), err
-}
-
-func setHeader(w http.ResponseWriter, data interface{}, statusCode int) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	err := json.NewEncoder(w).Encode(data)
-	if err != nil {
-		log.Println("SignUp: Error in encoding the data")
-	}
 }
