@@ -10,7 +10,7 @@ import (
 // Migrate function is used to create database table from the model
 // AutoMigrate function does not work by providing the reference of struct
 // Hence, Migrating the model to database using AutoMigrate function concretely
-func Migrate(postgres db.PostgreSQL) {
+func Migrate(postgres db.DB) {
 	conn := postgres.ConnectDB()
 	defer func(conn *gorm.DB) {
 		err := postgres.CloseDB(conn)
