@@ -34,3 +34,16 @@ func (c *PostgreSQLRepository) CloseDB(connection *gorm.DB) error {
 	log.Println("database closed successfully")
 	return nil
 }
+
+func (c *PostgreSQLRepository) Create(model interface{}, value interface{}) error {
+	connection := c.ConnectDB()
+	defer func(conn *gorm.DB) {
+		err := c.CloseDB(conn)
+		if err != nil {
+			log.Println("Postgres: cannot close current database")
+		}
+	}(connection)
+
+	res := connection.Model(model).Create(value)
+	return res.Error
+}
