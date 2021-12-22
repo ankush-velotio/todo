@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
+	"todo/internal/models"
 )
 
 type PostgreSQLRepository struct {
@@ -35,7 +36,7 @@ func (c *PostgreSQLRepository) CloseDB(connection *gorm.DB) error {
 	return nil
 }
 
-func (c *PostgreSQLRepository) Create(model interface{}, value interface{}) error {
+func (c *PostgreSQLRepository) Create(model, value interface{}) error {
 	connection := c.ConnectDB()
 	defer func(conn *gorm.DB) {
 		err := c.CloseDB(conn)
@@ -46,4 +47,47 @@ func (c *PostgreSQLRepository) Create(model interface{}, value interface{}) erro
 
 	res := connection.Model(model).Create(value)
 	return res.Error
+}
+func (c *PostgreSQLRepository) CreateTodo(model, value interface{}) error {
+	connection := c.ConnectDB()
+	defer func(conn *gorm.DB) {
+		err := c.CloseDB(conn)
+		if err != nil {
+			log.Println("Postgres: cannot close current database")
+		}
+	}(connection)
+
+	// Todo: If editors is not omitted then it will override the related user in database
+	// If editors field is omitted then it will not create todo and editors relationship
+	res := connection.Model(model).Omit("Editors").Create(value)
+	return res.Error
+}
+
+func (c *PostgreSQLRepository) FindTodo(model interface{}) interface{} {
+	connection := c.ConnectDB()
+	defer func(conn *gorm.DB) {
+		err := c.CloseDB(conn)
+		if err != nil {
+			log.Println("Postgres: cannot close current database")
+		}
+	}(connection)
+
+	var rec []models.Todo
+
+	connection.Model(model).Preload("Editors").Preload("Owner").Find(&rec)
+
+	return rec
+}
+
+func (c *PostgreSQLRepository) Where(query, model interface{}, args ...interface{}) interface{} {
+	connection := c.ConnectDB()
+	defer func(conn *gorm.DB) {
+		err := c.CloseDB(conn)
+		if err != nil {
+			log.Println("Postgres: cannot close current database")
+		}
+	}(connection)
+
+	connection.Model(model).Where(query, args...).First(model)
+	return model
 }

@@ -18,8 +18,20 @@ func (db DB) CloseDB(conn *gorm.DB) error {
 	return db.IDBRepository.CloseDB(conn)
 }
 
-func (db DB) Create(model interface{}, value interface{}) error {
+func (db DB) Create(model, value interface{}) error {
 	return db.IDBRepository.Create(model, value)
+}
+
+func (db DB) CreateTodo(model, value interface{}) error {
+	return db.IDBRepository.CreateTodo(model, value)
+}
+
+func (db DB) FindTodo(model interface{}) interface{} {
+	return db.IDBRepository.FindTodo(model)
+}
+
+func (db DB) Where(query, model interface{}, args ...interface{}) interface{} {
+	return db.IDBRepository.Where(query, model, args)
 }
 
 var DBConn = DB{IDBRepository: &db.PostgreSQLRepository{DatabaseDialect: "postgres",

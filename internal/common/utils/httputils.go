@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	db "todo/cmd/connect_db"
+	"todo/internal/models"
 )
 
 var jwtSigningKey = []byte(os.Getenv("SECRET_KEY"))
@@ -44,4 +46,12 @@ func GetDataFromAuthToken(w http.ResponseWriter, r *http.Request, key string) in
 		}
 	}
 	return nil
+}
+
+func GetRequestUser(w http.ResponseWriter, r *http.Request) models.User {
+	userEmail := GetDataFromAuthToken(w, r, "email").(string)
+	var dbUser models.User
+	db.DBConn.Where("email = ?", &dbUser, userEmail)
+	dbUser.Password = ""
+	return dbUser
 }

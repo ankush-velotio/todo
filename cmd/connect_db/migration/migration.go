@@ -20,5 +20,6 @@ func Migrate(postgres db.DB) {
 	}(conn)
 	conn.AutoMigrate(models.User{})
 	conn.AutoMigrate(models.Todo{})
+	conn.Model(&models.Todo{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 	log.Println("Migrate DB: database migrated successfully")
 }
