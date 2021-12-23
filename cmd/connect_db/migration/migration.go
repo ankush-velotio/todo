@@ -2,7 +2,7 @@ package migration
 
 import (
 	"github.com/astaxie/beego/orm"
-"github.com/jinzhu/gorm"
+	"github.com/jinzhu/gorm"
 	"log"
 	db "todo/cmd/connect_db"
 	"todo/internal/models"

@@ -7,13 +7,13 @@ import (
 
 // User model
 type User struct {
-	Id    int    `orm:"pk; auto"`
+	Id        int `orm:"pk; auto"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Active   bool   `json:"active"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	Active    bool   `json:"active"`
 }
 
 func init() {

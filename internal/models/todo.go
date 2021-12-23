@@ -18,17 +18,17 @@ const (
 	_Todo model
 */
 type Todo struct {
-	Id    int    `orm:"pk; auto"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Id           int `orm:"pk; auto"`
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
 	Date         time.Time `json:"date"`
 	IsBookmarked bool      `json:"isBookmarked"`
-	UserId    int
+	UserId       int
 	Owner        *User   `json:"owner" orm:"rel(fk)"`
 	Editors      []*User `json:"editors" orm:"rel(m2m);rel_table(todo/internal/models.TodoUsers)"`
-	Status       Status `json:"status"`
+	Status       Status  `json:"status"`
 }
 
 func init() {

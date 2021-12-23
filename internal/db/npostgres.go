@@ -4,8 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	_ "github.com/lib/pq"
 	"todo/internal/models"
-
-	)
+)
 
 type NPostgreSQLRepository struct {
 	DatabaseDialect string

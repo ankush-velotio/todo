@@ -9,7 +9,6 @@ import (
 	"os"
 	db "todo/cmd/connect_db"
 	"todo/internal/models"
-
 )
 
 var jwtSigningKey = []byte(os.Getenv("SECRET_KEY"))
