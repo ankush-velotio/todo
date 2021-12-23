@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	db "todo/cmd/connect_db"
 	auth "todo/internal/auth/jwt"
 	"todo/internal/auth/user"
 	"todo/internal/todo"
@@ -18,6 +19,7 @@ func authorizeRequest(view http.HandlerFunc) http.Handler {
 }
 
 func main() {
+	db.DBConn.ConnectDB()
 	router := mux.NewRouter()
 	router.HandleFunc("/signup", user.SignUp)
 	router.HandleFunc("/signin", user.SignIn)

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"github.com/astaxie/beego/orm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"time"
 )
@@ -18,13 +18,19 @@ const (
 	_Todo model
 */
 type Todo struct {
-	gorm.Model
+	Id    int    `orm:"pk; auto"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
 	Date         time.Time `json:"date"`
 	IsBookmarked bool      `json:"isBookmarked"`
-	UserEmail    string
-	Owner        User   `json:"owner" gorm:"foreignKey:UserEmail"`
-	Editors      []User `json:"editors" gorm:"many2many:todo_editors;"`
+	UserId    int
+	Owner        *User   `json:"owner" orm:"rel(fk)"`
+	Editors      []*User `json:"editors" orm:"rel(m2m);rel_table(todo/internal/models.TodoUsers)"`
 	Status       Status `json:"status"`
+}
+
+func init() {
+	orm.RegisterModel(new(Todo))
 }

@@ -12,7 +12,7 @@ type PostgreSQLRepository struct {
 	DatabaseURL     string
 }
 
-func (c *PostgreSQLRepository) ConnectDB() *gorm.DB {
+func (c *PostgreSQLRepository) ConnectDB() interface{} {
 	connection, err := gorm.Open(c.DatabaseDialect, c.DatabaseURL)
 
 	if err != nil {
@@ -27,16 +27,16 @@ func (c *PostgreSQLRepository) ConnectDB() *gorm.DB {
 	return connection
 }
 
-func (c *PostgreSQLRepository) CloseDB(connection *gorm.DB) error {
-	if err := connection.Close(); err != nil {
+func (c *PostgreSQLRepository) CloseDB(connection interface{}) error {
+	if err := connection.(*gorm.DB).Close(); err != nil {
 		return errors.New("cannot close current database")
 	}
 	log.Println("database closed successfully")
 	return nil
 }
 
-func (c *PostgreSQLRepository) Create(model interface{}, value interface{}) error {
-	connection := c.ConnectDB()
+func (c *PostgreSQLRepository) Create(model, value interface{}) error {
+	connection := c.ConnectDB().(*gorm.DB)
 	defer func(conn *gorm.DB) {
 		err := c.CloseDB(conn)
 		if err != nil {
@@ -46,4 +46,12 @@ func (c *PostgreSQLRepository) Create(model interface{}, value interface{}) erro
 
 	res := connection.Model(model).Create(value)
 	return res.Error
+}
+
+func (c *PostgreSQLRepository) FindUser(value interface{}) interface{} {
+	return nil
+}
+
+func (c *PostgreSQLRepository) GetAllTodo() interface{} {
+	return nil
 }

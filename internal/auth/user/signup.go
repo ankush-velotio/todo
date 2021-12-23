@@ -3,11 +3,11 @@ package user
 import (
 	"encoding/json"
 	"errors"
-	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
-	"todo/cmd/connect_db"
+	"time"
+	db "todo/cmd/connect_db"
 	"todo/internal/common/utils"
 	"todo/internal/models"
 )
@@ -17,14 +17,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	pgConf := connect_db.DBConn
-	conn := pgConf.ConnectDB()
-	defer func(pgConf connect_db.DB, conn *gorm.DB) {
-		err := pgConf.CloseDB(conn)
-		if err != nil {
-			log.Println("SignUp: Cannot close current database")
-		}
-	}(pgConf, conn)
 
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -34,7 +26,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var dbUser models.User
-	conn.Where("email = ?", user.Email).First(&dbUser)
+	dbUser = db.DBConn.FindUser(user.Email).(models.User)
 
 	//checks if email is already register or not
 	if dbUser.Email != "" {
@@ -48,8 +40,15 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("error in password hash")
 	}
 
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
+
 	//insert user details in database
-	conn.Create(&user)
+	err = db.DBConn.Create(models.User{}, &user)
+	if err != nil {
+		err = errors.New("unable to create your account")
+		utils.SetHeader(w, err, http.StatusInternalServerError)
+	}
 	user.Password = ""
 	utils.SetHeader(w, user, http.StatusOK)
 }

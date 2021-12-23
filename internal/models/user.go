@@ -1,12 +1,21 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/astaxie/beego/orm"
+	"time"
+)
 
 // User model
 type User struct {
-	gorm.Model
+	Id    int    `orm:"pk; auto"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 	Name     string `json:"name"`
-	Email    string `gorm:"primaryKey" json:"email"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 	Active   bool   `json:"active"`
+}
+
+func init() {
+	orm.RegisterModel(new(User))
 }

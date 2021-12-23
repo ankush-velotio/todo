@@ -3,11 +3,9 @@ package user
 import (
 	"encoding/json"
 	"errors"
-	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 	"net/http"
-	"todo/cmd/connect_db"
+	db "todo/cmd/connect_db"
 	auth "todo/internal/auth/jwt"
 	"todo/internal/common/utils"
 	"todo/internal/models"
@@ -24,14 +22,6 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	pgConf := connect_db.DBConn
-	conn := pgConf.ConnectDB()
-	defer func(pgConf connect_db.DB, conn *gorm.DB) {
-		err := pgConf.CloseDB(conn)
-		if err != nil {
-			log.Println("SignIn: Cannot close current database")
-		}
-	}(pgConf, conn)
 
 	var authDetails Authentication
 	err := json.NewDecoder(r.Body).Decode(&authDetails)
@@ -48,7 +38,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var authUser models.User
-	conn.Where("email = ?", authDetails.Email).First(&authUser)
+	authUser = db.DBConn.FindUser(authDetails.Email).(models.User)
 	if authUser.Email == "" {
 		err = errors.New("username or password is incorrect")
 		utils.SetHeader(w, err, http.StatusUnauthorized)
