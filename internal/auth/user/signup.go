@@ -49,8 +49,11 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		err = errors.New("unable to create your account")
 		utils.SetHeader(w, err, http.StatusInternalServerError)
 	}
-	user.Password = ""
-	utils.SetHeader(w, user, http.StatusOK)
+	data, err := utils.GetCustomJSON(user, "password")
+	if err != nil {
+		return
+	}
+	utils.SetHeader(w, data, http.StatusOK)
 }
 
 func GenerateHashPassword(password []byte) (string, error) {
